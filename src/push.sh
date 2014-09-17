@@ -11,28 +11,6 @@ REMOTE_PREFIX="!!!REMOTE_PREFIX!!!"
 OPT_SQUASH=" --squash"
 
 # - - - - - - - - - - - - - - - - - - - -
-# arguments
-
-# - command options
-
-while getopts h?s OPT
-do
-  case $OPT in
-    h|\?) echo_help
-          exit 0
-          ;;
-    s)    OPT_SQUASH="";;
-  esac
-done
-
-shift $((OPTIND - 1))
-
-# - other arguments
-
-NAME="$1"
-BRANCH="$2"
-
-# - - - - - - - - - - - - - - - - - - - -
 # functions
 
 # - help
@@ -73,6 +51,28 @@ EOT
 push() {
   eval git subtree push $OPT_SQUASH --prefix "$DIR_PREFIX/$1" "$REMOTE_PREFIX$1" "$BRANCH"
 }
+
+# - - - - - - - - - - - - - - - - - - - -
+# arguments
+
+# - command options
+
+while getopts h?s OPT
+do
+  case $OPT in
+    h|\?) echo_help
+          exit 0
+          ;;
+    s)    OPT_SQUASH="";;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+# - other arguments
+
+NAME="$1"
+BRANCH="$2"
 
 # - - - - - - - - - - - - - - - - - - - -
 # guard

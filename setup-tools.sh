@@ -2,7 +2,7 @@
 
 # basics
 MY_DIR="`readlink -f "$0" | sed 's/\/[^\/]*$//'`"
-MY_NAME="init-git-subtree"
+MY_NAME="setup-tools"
 MY_VERSION="1.0"
 
 # optinable variables
@@ -11,29 +11,6 @@ REMOTE_PREFIX=subtree_
 
 # others
 SRC_DIR="$MY_DIR/src"
-
-# - - - - - - - - - - - - - - - - - - - -
-# arguments
-# {{{1
-
-# - command options
-
-while getopts d:r:t:fh? OPT
-do
-  case $OPT in
-    d)    DIR_PREFIX="$OPTARG";;
-    r)    REMOTE_PREFIX="$OPTARG";;
-    t)    OPT_INIT=$OPTARG;;
-    f)    OPT_FORCE=1;;
-    h|\?) echo_help
-          exit 0
-          ;;
-  esac
-done
-
-shift $((OPTIND - 1))
-
-# }}}1 - arguments
 
 # - - - - - - - - - - - - - - - - - - - -
 # functions
@@ -46,6 +23,8 @@ echo_help() { # {{{5
 
   cat <<EOT
 $MY_NAME ($MY_VERSION)
+
+setup git-subtree-tools for each Git project.
 
 Usage:
   $MY_NAME [Options] [GIT_ROOT_DIR]
@@ -75,8 +54,8 @@ Options:
     display help message
 
   -t type
-    script type for initialize
-    all|pull|add
+    script type for setup
+    all|add|pull|push
 
     default value is all
 
@@ -85,61 +64,61 @@ EOT
 
 # }}}2 - help
 
-# - initialize
+# - setup
 # {{{2
 
-init() {
+setup() {
   mkdir -p "$DIR_PREFIX"
 
   if [ -n "$OPT_INIT" ] && [ "$OPT_INIT" != "all" ]; then
-    eval "init_$OPT_INIT"
+    eval "setup_$OPT_INIT"
   else
-    init_all
+    setup_all
   fi
 }
 
-init_all() { # {{{5
+setup_all() { # {{{5
 
   for act in add pull push
   do
-    eval "init_$act"
+    eval "setup_$act"
   done
 } # }}}5
 
-init_add() { # {{{5
+setup_add() { # {{{5
 
   local filename="add.sh"
   local output="$DIR_PREFIX/$filename"
 
-  if check_initializable "$output" -eq 0; then
+  if check_writable "$output" -eq 0; then
     read_source "$filename" > "$output"
     chmod +x "$output"
   fi
 } # }}}5
 
-init_pull() { # {{{5
+setup_pull() { # {{{5
 
   local filename="pull.sh"
   local output="$DIR_PREFIX/$filename"
 
-  if check_initializable "$output" -eq 0; then
+  if check_writable "$output" -eq 0; then
     read_source "$filename" > "$output"
     chmod +x "$output"
   fi
 } # }}}5
 
-init_push() { # {{{5
+setup_push() { # {{{5
 
   local filename="push.sh"
   local output="$DIR_PREFIX/$filename"
 
-  if check_initializable "$output" -eq 0; then
+  if check_writable "$output" -eq 0; then
     read_source "$filename" > "$output"
     chmod +x "$output"
   fi
 } # }}}5
 
-# }}}2 - initilize
+# }}}2 - setup
 
 # - other
 # {{{2
@@ -157,15 +136,15 @@ read_source() { # {{{5
 } # }}}5
 
 # = =
-# check initializable by arguments
+# check writable
 #
 # args
 # $1 ... output path
 #
 # returner
-# 0 ... initializable
-# 1 ... not initializable
-check_initializable() { # {{{5
+# 0 ... writable
+# 1 ... not writable
+check_writable() { # {{{5
 
   if [ -e "$1" ] && [ "$OPT_FORCE" != "1" ]; then
 
@@ -197,6 +176,29 @@ make_root_dir_string() { # {{{5
 # }}}1 functions
 
 # - - - - - - - - - - - - - - - - - - - -
+# arguments
+# {{{1
+
+# - command options
+
+while getopts d:r:t:fh? OPT
+do
+  case $OPT in
+    d)    DIR_PREFIX="$OPTARG";;
+    r)    REMOTE_PREFIX="$OPTARG";;
+    t)    OPT_INIT=$OPTARG;;
+    f)    OPT_FORCE=1;;
+    h|\?) echo_help
+          exit 0
+          ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+# }}}1 - arguments
+
+# - - - - - - - - - - - - - - - - - - - -
 # main
 # {{{1
 
@@ -213,6 +215,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-init
+setup
 
 # }}}1 main

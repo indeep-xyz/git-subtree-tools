@@ -11,29 +11,6 @@ REMOTE_PREFIX="!!!REMOTE_PREFIX!!!"
 OPT_SQUASH=" --squash"
 
 # - - - - - - - - - - - - - - - - - - - -
-# arguments
-
-# - command options
-
-while getopts h?s OPT
-do
-  case $OPT in
-    h|\?) echo_help
-          exit 0
-          ;;
-    s)    OPT_SQUASH="";;
-  esac
-done
-
-shift $((OPTIND - 1))
-
-# - other arguments
-
-NAME="$1"
-REMOTE_PATH="$2"
-BRANCH="${3:-master}"
-
-# - - - - - - - - - - - - - - - - - - - -
 # functions
 
 # - help
@@ -68,6 +45,29 @@ Options:
 
 EOT
 }
+
+# - - - - - - - - - - - - - - - - - - - -
+# arguments
+
+# - command options
+
+while getopts h?s OPT
+do
+  case $OPT in
+    h|\?) echo_help
+          exit 0
+          ;;
+    s)    OPT_SQUASH="";;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+# - other arguments
+
+NAME="$1"
+REMOTE_PATH="$2"
+BRANCH="${3:-master}"
 
 # - - - - - - - - - - - - - - - - - - - -
 # guard

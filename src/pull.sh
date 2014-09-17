@@ -11,28 +11,6 @@ REMOTE_PREFIX="!!!REMOTE_PREFIX!!!"
 OPT_SQUASH=" --squash"
 
 # - - - - - - - - - - - - - - - - - - - -
-# arguments
-
-# - command options
-
-while getopts h?s OPT
-do
-  case $OPT in
-    h|\?) echo_help
-          exit 0
-          ;;
-    s)    OPT_SQUASH="";;
-  esac
-done
-
-shift $((OPTIND - 1))
-
-# - other arguments
-
-NAME="$1"
-BRANCH="${2:-master}"
-
-# - - - - - - - - - - - - - - - - - - - -
 # functions
 
 # - help
@@ -87,6 +65,28 @@ pull_all() {
     fi
   done
 }
+
+# - - - - - - - - - - - - - - - - - - - -
+# arguments
+
+# - command options
+
+while getopts h?s OPT
+do
+  case $OPT in
+    h|\?) echo_help
+          exit 0
+          ;;
+    s)    OPT_SQUASH="";;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+# - other arguments
+
+NAME="$1"
+BRANCH="${2:-master}"
 
 # - - - - - - - - - - - - - - - - - - - -
 # main
