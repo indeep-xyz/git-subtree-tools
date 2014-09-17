@@ -40,7 +40,7 @@ Options:
     display help message
 
   -s
-    disable to \`git push --squash\` option
+    disable to \`git add --squash\` option
     default is enabled
 
 EOT
